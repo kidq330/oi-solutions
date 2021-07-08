@@ -7,7 +7,7 @@
 // Rozwiązanie: Zauważmy, że stan, gdzie pole m-1 jest niepuste jest zawsze przegrywający.
 // Będziemy próbować znaleźć równoważność z pewną wariacją gry Nim, dokładnie
 // Nim na schodach, tzn. na m schodach rozstawione stosy kamieni, ruch polega
-// na przeniesieniu dowolnej, niezerowej ilości kamieni z jednego stosu na niższy schów.
+// na przeniesieniu dowolnej, niezerowej ilości kamieni z jednego stosu na niższy schód.
 // Z ostatniego schoda nie można zabierać kamieni. Przegrywa gracz, który nie może wykonać ruchu.
 // Zauważmy, że kamienie parzyste nie grają w tej wersji istotnej roli. Załóżmy, że
 // gracz jest w pozycji przegrywającej, i postanawia przenieść x kamieni na schód nieparzysty.
