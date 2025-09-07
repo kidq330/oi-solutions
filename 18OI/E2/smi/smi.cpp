@@ -1,27 +1,27 @@
 #include <bits/stdc++.h>
-using namespace std;
 
 struct edge {
   int id, cross_id;
-  edge(){}
+  edge() {}
   edge(int _id, int _cid) : id(_id), cross_id(_cid) {}
 };
 
-//adjacency list
-vector< list<edge> > adj;
+// adjacency list
+std::vector<std::list<edge>> adj;
 
-//adj[v][u].cross_id indexes an iterator in link to adj[u][v] for bidirectional edge deletion in O(1) 
-vector<list<edge>::iterator> link;
+// `adj[v][u].cross_id` indexes an iterator in `links` to `adj[u][v]` for
+// bidirectional edge deletion in O(1)
+std::vector<std::list<edge>::iterator> links;
 
-//placeholder vector used by dfs and cycle decomposer
-vector<int> path;
+// placeholder vector used by dfs and cycle decomposer
+std::vector<int> path;
 
-vector<bool> vis;
+std::vector<bool> vis;
 
 void read(const int &E, const int &V) {
-  adj.resize(V+1);
-  vis.resize(V+1);
-  link.resize(2*E);
+  adj.resize(V + 1);
+  vis.resize(V + 1);
+  links.resize(2 * E);
 
   int cnt = 0;
 
@@ -29,23 +29,23 @@ void read(const int &E, const int &V) {
     int a, b;
     bool before, after;
 
-    cin >> a >> b >> before >> after;
+    std::cin >> a >> b >> before >> after;
 
     if (before != after) {
       adj[a].push_back(edge(b, cnt));
-      adj[b].push_back(edge(a, cnt+1));
+      adj[b].push_back(edge(a, cnt + 1));
 
-      link[cnt] = adj[b].end();
-      link[cnt+1] = adj[a].end();
-      --link[cnt], --link[cnt+1];
+      links[cnt] = adj[b].end();
+      links[cnt + 1] = adj[a].end();
+      --links[cnt], --links[cnt + 1];
 
       cnt += 2;
     }
   }
 }
 
-//Hierholzer's algo for finding eulerian path/cycle in an undirected connected graph
-//deletes edges when run
+// Hierholzer's algo for finding eulerian path/cycle in an undirected connected
+// graph deletes edges when run
 void HHdfs(int node) {
   vis[node] = true;
 
@@ -53,7 +53,7 @@ void HHdfs(int node) {
     edge next = adj[node].back();
 
     adj[node].pop_back();
-    adj[next.id].erase(link[next.cross_id]); 
+    adj[next.id].erase(links[next.cross_id]);
 
     HHdfs(next.id);
   }
@@ -61,16 +61,17 @@ void HHdfs(int node) {
   path.push_back(node);
 }
 
-void decompose(vector< vector<int> > &eulerian_cycles, vector< vector<int> > &cycles) {
+void decompose(std::vector<std::vector<int>> &eulerian_cycles,
+               std::vector<std::vector<int>> &cycles) {
   for (auto cycle : eulerian_cycles) {
 
     for (auto x : cycle) {
 
-      //once we revisit a vertex, we backtrack and add the vertices to res
+      // once we revisit a vertex, we backtrack and add the vertices to res
       if (vis[x]) {
         cycles.push_back({x});
         auto &res = cycles.back();
-        
+
         while (vis[x]) {
           int v = path.back();
           path.pop_back();
@@ -86,24 +87,24 @@ void decompose(vector< vector<int> > &eulerian_cycles, vector< vector<int> > &cy
 }
 
 int main() {
-  ios_base::sync_with_stdio(0);
-  cin.tie(0);
-  cout.tie(0);
+  std::ios_base::sync_with_stdio(0);
+  std::cin.tie(0);
+  std::cout.tie(0);
 
   int E, V;
-  cin >> V >> E;
+  std::cin >> V >> E;
   read(E, V);
 
-  //check if eulerian cycle exists
+  // check if eulerian cycle exists
   for (auto x : adj) {
-    if (x.size()%2) {
-      cout << "NIE";
+    if (x.size() % 2) {
+      std::cout << "NIE";
       return 0;
     }
   }
 
-  vector< vector<int> > euler_cycles;
-  //loops over vertices in case of a disconnected graph
+  std::vector<std::vector<int>> euler_cycles;
+  // loops over vertices in case of a disconnected graph
   for (int i = 1; i <= V; ++i) {
     if (!vis[i]) {
       HHdfs(i);
@@ -112,18 +113,19 @@ int main() {
     }
   }
 
-  //stores final res.
-  vector< vector<int> > cycles;
+  // stores final res.
+  std::vector<std::vector<int>> cycles;
 
   fill(vis.begin(), vis.end(), false);
 
   decompose(euler_cycles, cycles);
 
-  cout << cycles.size() << endl;
+  std::cout << cycles.size() << std::endl;
   for (auto cycle : cycles) {
-    cout << cycle.size()-1 << ' ';
+    std::cout << cycle.size() - 1 << ' ';
     for (auto x : cycle) {
-      cout << x << ' ';
-    } cout << endl;
+      std::cout << x << ' ';
+    }
+    std::cout << std::endl;
   }
 }
